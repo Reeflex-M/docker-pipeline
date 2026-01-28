@@ -13,8 +13,10 @@ jobs:
         run: docker build -f Dockerfile.insecure -t app:${{ github.sha }} .
 
       - name: Run Trivy
-        uses: aquasecurity/security-scanner@v1 # Version recommandée
+        # Correction du nom ici : trivy-action au lieu de security-scanner
+        uses: aquasecurity/trivy-action@0.28.0 
         with:
           image-ref: 'app:${{ github.sha }}'
+          format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
