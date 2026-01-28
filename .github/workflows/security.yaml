@@ -1,0 +1,20 @@
+name: Security Scan
+
+on: [push, pull_request]
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -f Dockerfile.insecure -t app:${{ github.sha }} .
+
+      - name: Run Trivy
+        uses: aquasecurity/security-scanner@v1 # Version recommandée
+        with:
+          image-ref: 'app:${{ github.sha }}'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
